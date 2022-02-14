@@ -42,4 +42,13 @@ class TodosControllerShould {
     verify(todosService).getTodos(Status.OPEN);
   }
 
+  @Test
+  void invoke_todos_service_to_mark_close_a_todo(){
+    //Arrange
+    TodosController todosController = new TodosController(todosService);
+    //Act
+    todosController.close("1");
+    verify(todosService).close("1");
+  }
+
 }

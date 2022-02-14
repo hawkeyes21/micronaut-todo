@@ -28,6 +28,8 @@ dependencies {
     annotationProcessor("io.micronaut.data:micronaut-data-processor:3.2.2")
     implementation("io.micronaut.data:micronaut-data-hibernate-jpa:3.2.2")
     runtimeOnly("io.micronaut.sql:micronaut-jdbc-tomcat")
+
+    runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
 }
 
 
