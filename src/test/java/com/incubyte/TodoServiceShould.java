@@ -45,13 +45,11 @@ class TodoServiceShould {
 
     @Test
     void update_todo_status_to_close_by_todo_id() {
-        Todo newTodo = new Todo("Title here", Status.OPEN);
-        newTodo.setId(1L);
+        TodoService todosService = new TodoService(todoRepository);
+        Todo todo = new Todo("Title", Status.OPEN);
+        todo.setId(1L);
+        todosService.close(todo);
 
-        when(todoRepository.findById(1L)).thenReturn(Optional.of(newTodo));
-
-        TodoService todoService = new TodoService(todoRepository);
-//        Todo todo = todoService.close("1");
-        verify(todoRepository).update(newTodo);
+        verify(todoRepository).update(todo);
     }
 }
