@@ -51,7 +51,7 @@ class TodoServiceShould {
         when(todoRepository.findById(1L)).thenReturn(Optional.of(newTodo));
 
         TodoService todoService = new TodoService(todoRepository);
-        Todo todo = todoService.close("1");
+//        Todo todo = todoService.close("1");
         verify(todoRepository).update(newTodo);
     }
 }

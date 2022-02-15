@@ -32,10 +32,10 @@ class TodosControllerTest {
 
     @BeforeEach
     public void init() {
-        todo.put("title", "Remember eggs");
+        todo.put("title", "Go for a walk");
         todo.put("status", "OPEN");
 
-        todo2.put("title", "Remember milk");
+        todo2.put("title", "Read a book");
         todo2.put("status", "OPEN");
     }
 
@@ -45,23 +45,19 @@ class TodosControllerTest {
 
         // ACT
         Map<String, String> response =
-                client
-                        .toBlocking()
-                        .retrieve(HttpRequest.POST("/todos", todo), Argument.mapOf(String.class, String.class));
+                client.toBlocking().retrieve(HttpRequest.POST("/todos", todo), Argument.mapOf(String.class, String.class));
         // Assert
         assertThat(response.get("id")).isNotNull();
         assertThat(response.get("id")).isNotEmpty();
-        assertThat(response.get("title")).isEqualTo("Remember eggs");
+        assertThat(response.get("title")).isEqualTo("Go for a walk");
         assertThat(response.get("status")).isEqualTo("OPEN");
 
         response =
-                client
-                        .toBlocking()
-                        .retrieve(HttpRequest.POST("/todos", todo2), Argument.mapOf(String.class, String.class));
+                client.toBlocking().retrieve(HttpRequest.POST("/todos", todo2), Argument.mapOf(String.class, String.class));
         // Assert
         assertThat(response.get("id")).isNotNull();
         assertThat(response.get("id")).isNotEmpty();
-        assertThat(response.get("title")).isEqualTo("Remember milk");
+        assertThat(response.get("title")).isEqualTo("Read a book");
         assertThat(response.get("status")).isEqualTo("OPEN");
 
         List<Map> todos =
@@ -76,46 +72,36 @@ class TodosControllerTest {
         Map<String, String> todo = new HashMap<>();
         todo.put("title", "");
         todo.put("status", "OPEN");
+
         // ACT
-
-        Assertions.assertThrows(
-                HttpClientResponseException.class,
-                () ->
-                        client
-                                .toBlocking()
-                                .retrieve(HttpRequest.POST("/todos", todo), Argument.of(HttpResponse.class)));
-
+        Assertions.assertThrows(HttpClientResponseException.class,
+                () -> client.toBlocking().retrieve(HttpRequest.POST("/todos", todo), Argument.of(HttpResponse.class)));
     }
 
     @Test
     void should_close_an_open_todo() {
-        // Arrange
-        Map<String, String> todo = new HashMap<>();
-//        todo.put("id", "1");
-        todo.put("title", "we're just updating todo");
-        todo.put("status", "OPEN");
         // ACT
-
-//    Assertions.assertThrows(
-//            HttpClientResponseException.class,
-//            () -> client
-//                    .toBlocking()
-//                    .retrieve(HttpRequest.POST("/todos/{id}", todo), Argument.of(HttpResponse.class)));
-
         Map<String, String> response =
-                client
-                        .toBlocking()
-                        .retrieve(HttpRequest.POST("/todos", todo), Argument.mapOf(String.class, String.class));
+                client.toBlocking().retrieve(HttpRequest.POST("/todos", todo), Argument.mapOf(String.class, String.class));
 
-        System.out.println(response);
+        // Assert
+        assertThat(response.get("id")).isNotNull();
+        assertThat(response.get("id")).isNotEmpty();
+        assertThat(response.get("title")).isEqualTo("Go for a walk");
+        assertThat(response.get("status")).isEqualTo("OPEN");
 
-        response.put("status", "CLOSED");
+        Map<String, String> closedTodo = new HashMap<>();
+        closedTodo.put("id", response.get("id"));
+        closedTodo.put("title", response.get("title"));
+        closedTodo.put("status", "CLOSED");
 
-        Map<String, String> todos =
-                client.toBlocking().retrieve(HttpRequest.POST("/todos/" + response.get("id"), null), Argument.mapOf(String.class, String.class));
-//    assertThat(todos.get(0).getTitle()).isEqualTo("we're just updating todo");
-//    assertThat(todos.get(0).getId()).isEqualTo("1");
+        Map<String, String> newTodo =
+                client.toBlocking().retrieve(HttpRequest.PATCH("/todos/", closedTodo), Argument.mapOf(String.class, String.class));
 
+        assertThat(newTodo.get("id")).isNotNull();
+        assertThat(newTodo.get("id")).isNotEmpty();
+        assertThat(newTodo.get("title")).isEqualTo("Go for a walk");
+        assertThat(newTodo.get("status")).isEqualTo("CLOSED");
     }
 
 }

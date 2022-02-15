@@ -23,8 +23,7 @@ public class TodoService {
     return todoRepository.findByStatusOrderById(status);
   }
 
-  public Todo close(String id) {
-    Optional<Todo> todo = todoRepository.findById(Long.valueOf(id));
-    return todoRepository.update(todo.get());
+  public Todo close(Todo todo) {
+    return todoRepository.update(todo);
   }
 }

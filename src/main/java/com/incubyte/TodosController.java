@@ -28,8 +28,8 @@ public class TodosController {
     return todoService.getTodos(Status.OPEN);
   }
 
-  @Post("/{id}")
-  public Todo close(@QueryValue String id) {
-    return todoService.close(id);
+  @Patch
+  public Todo close(@Body Todo todo) {
+    return todoService.close(todo);
   }
 }
